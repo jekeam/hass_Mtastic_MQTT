@@ -75,7 +75,7 @@ class _TelemetryAirtimelUtil(BaseEntity, sensor.SensorEntity):
     @property
     def native_value(self) -> float | None:
         if tel := self.coordinator.data.get("device_metrics"):
-            if value := tel.get("air_util_tx"):
+            if (value := tel.get("air_util_tx")) is not None:
                 return value
         return None
 
@@ -94,26 +94,7 @@ class _TelemetryChannelUtil(BaseEntity, sensor.SensorEntity):
     @property
     def native_value(self) -> float | None:
         if tel := self.coordinator.data.get("device_metrics"):
-            if value := tel.get("channel_utilization"):
-                return value
-        return None
-
-class _TelemetryChannelUtil(BaseEntity, sensor.SensorEntity):
-
-    def __init__(self, coordinator):
-        super().__init__(coordinator)
-        self.with_name(f"tel_channel_utilization", "Channel Utilization")
-        self._attr_state_class = "measurement"
-        self._attr_native_unit_of_measurement = "%"
-        self._attr_suggested_display_precision = 1
-        self._attr_entity_registry_enabled_default = False
-        self._attr_icon = "mdi:gauge"
-        self._attr_entity_category = EntityCategory.DIAGNOSTIC
-
-    @property
-    def native_value(self) -> float | None:
-        if tel := self.coordinator.data.get("device_metrics"):
-            if value := tel.get("channel_utilization"):
+            if (value := tel.get("channel_utilization")) is not None:
                 return value
         return None
 
@@ -172,8 +153,7 @@ class _TelemetryTemperature(BaseEntity, sensor.SensorEntity):
     @property
     def native_value(self) -> float | None:
         if tel := self.coordinator.data.get("environment_metrics"):
-            if (value := tel.get("temperature")) > 0:
-                return value
+            return tel.get("temperature")
         return None
 
 
